@@ -6,6 +6,8 @@ export default function Home() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [query, setQuery] = useState("");
+  const [hasSearched, setHasSearched] = useState(false);
 
   return (
     <div className="p-8 min-h-screen bg-slate-50">
@@ -24,9 +26,17 @@ export default function Home() {
           setResults={setResults}
           setLoading={setLoading}
           setError={setError}
+          setQuery={setQuery}
+          setHasSearched={setHasSearched}
         />
 
-        <ResultsGrid results={results} loading={loading} error={error} />
+        <ResultsGrid
+          results={results}
+          loading={loading}
+          error={error}
+          hasSearched={hasSearched}
+          query={query}
+        />
       </div>
     </div>
   );

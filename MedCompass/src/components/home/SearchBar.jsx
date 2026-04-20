@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 
-function SearchBar({ setResults, setLoading, setError }) {
+function SearchBar({ setResults, setLoading, setError, setQuery: setParentQuery, setHasSearched }) {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
     if (!query.trim()) {
-      setQuery("");
       setResults([]);
       setError(null);
+      setHasSearched(false);
+      setParentQuery("");
+      setLoading(false);
+      return;
     }
+
+    setParentQuery(query.trim());
 
     const debouncing = setTimeout(async () => {
       setError(null);
@@ -18,15 +23,24 @@ function SearchBar({ setResults, setLoading, setError }) {
         const response = await fetch(
           `https://api.fda.gov/drug/label.json?search=openfda.brand_name:${query}*&limit=9`,
         );
+
         if (!response.ok) {
-          throw new Error("No medications found for that query.");
+          if (response.status === 404) {
+            setResults([]);
+            setHasSearched(true);
+            return;
+          }
+
+          throw new Error("Unable to fetch medication data right now.");
         }
 
         const data = await response.json();
         setResults(data.results || []);
+        setHasSearched(true);
       } catch (error) {
         setResults([]);
-        setError(err.message);
+        setError(error.message || "Something went wrong. Please try again.");
+        setHasSearched(false);
       } finally {
         setLoading(false);
       }

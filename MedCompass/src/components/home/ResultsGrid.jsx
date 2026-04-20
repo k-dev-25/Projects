@@ -1,6 +1,7 @@
 import DrugCard from "./DrugCard.jsx";
+import NotFoundCard from "./NotFoundCard.jsx";
 
-export default function ResultsGrid({ results, loading, error }) {
+export default function ResultsGrid({ results, loading, error, hasSearched, query }) {
   if (loading) {
     return (
       <div className="text-center py-10">
@@ -17,6 +18,10 @@ export default function ResultsGrid({ results, loading, error }) {
         <p className="text-rose-600 font-medium">{error}</p>
       </div>
     );
+  }
+
+  if (hasSearched && results.length === 0) {
+    return <NotFoundCard query={query} />;
   }
 
   if (results.length === 0) {
