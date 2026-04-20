@@ -1,16 +1,91 @@
-# React + Vite
+# MedCompass
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Problem Statement
 
-Currently, two official plugins are available:
+People often search for medications by brand name but struggle to quickly understand what’s inside the drug (active ingredients), important label information (warnings/usage), and how to track the medicines they’ve saved for later.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+MedCompass is a React web app that lets authenticated users search for medications using the openFDA Drug Label API and maintain a personal “medicine cabinet” stored in Firebase Firestore.
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Authentication with Firebase (Email/Password): register, login, logout.
+- Protected routes: unauthenticated users are redirected to `/login`.
+- Medication search using the openFDA Drug Label endpoint.
+- Results view (grid) for search output.
+- Personal cabinet dashboard backed by Firestore:
+  - Fetch user-specific saved items (`cabinet` collection filtered by `userId`).
+  - Remove saved medicines.
+  - Add/edit personal notes per medicine.
+- Responsive navigation bar with auth-aware links:
 
-## Expanding the ESLint configuration
+- Responsive navigation bar with auth-aware links:
+  - Logged out: “Log In”.
+  - Logged in: “My Cabinet” + “Log Out”.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tech Stack
+
+- Frontend: React (Vite)
+- Styling: Tailwind CSS
+- Routing: `react-router` (v7)
+- Auth & Database: Firebase Authentication + Cloud Firestore
+- External API: openFDA Drug Label API (`https://api.fda.gov/drug/label.json`)
+
+## Setup Instructions
+
+### 1) Prerequisites
+
+- Node.js 18+ (recommended)
+- A Firebase project (for Auth + Firestore)
+
+### 2) Install dependencies
+
+From the `MedCompass` folder:
+
+```bash
+npm install
+```
+
+### 3) Configure Firebase environment variables
+
+Create a `.env` file in the `MedCompass` project root and add these values:
+
+```bash
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+These are consumed in [src/services/firebase.js](src/services/firebase.js).
+
+### 4) Enable Firebase services
+
+In Firebase Console:
+
+- Authentication → enable **Email/Password**.
+- Firestore Database → create a database.
+
+The app expects a `cabinet` collection where documents include a `userId` field (Firebase Auth UID) to query user-specific records.
+
+### 5) Run the app
+
+```bash
+npm run dev
+```
+
+Then open the Vite URL (usually `http://localhost:5173`).
+
+### 6) Production build (optional)
+
+```bash
+npm run build
+npm run preview
+```
+
+### 7) Lint (optional)
+
+```bash
+npm run lint
+```
