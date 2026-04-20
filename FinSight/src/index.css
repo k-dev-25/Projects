@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --app-background: #f8fafc;
+  --app-card: #ffffff;
+  --app-primary: #2563eb;
+  --app-text: #0f172a;
+  --app-muted: #64748b;
+}
+
+.dark {
+  --app-background: #020617;
+  --app-card: #0f172a;
+  --app-primary: #3b82f6;
+  --app-text: #e2e8f0;
+  --app-muted: #94a3b8;
+}
+
+@theme {
+  --color-background: var(--app-background);
+  --color-card: var(--app-card);
+  --color-primary: var(--app-primary);
+  --color-text: var(--app-text);
+  --color-muted: var(--app-muted);
+}
